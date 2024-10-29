@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>واجهة إرسال حزم لا نهائية</title>
+<title>واجهة إرسال حزم</title>
 <style>
 body {
 font-family: Arial, sans-serif;
@@ -45,7 +45,7 @@ border-radius: 5px;
 <body>
 
 <header>
-<h1>واجهة إرسال حزم لا نهائية</h1>
+<h1>واجهة إرسال حزم</h1>
 </header>
 
 <section>
@@ -81,11 +81,17 @@ sending = true;
 packetCount = 0; // إعادة تعيين العدد
 document.getElementById('packetCount').innerText = packetCount;
 
+// إرسال 10,000 حزمة في الثانية يعني إرسال حزمة كل 0.1 مللي ثانية
+const packetsPerSecond = 10000;
+const intervalTime = 1000 / packetsPerSecond; // 0.1 مللي ثانية
+
 interval = setInterval(() => {
+for (let i = 0; i < packetsPerSecond; i++) {
 packetCount++;
 document.getElementById('packetCount').innerText = packetCount;
 console.log(`تم إرسال حزمة رقم: ${packetCount}`);
-}, 100); // إرسال حزمة كل 100 مللي ثانية
+}
+}, intervalTime);
 });
 
 document.getElementById('stopButton').addEventListener('click', function() {
