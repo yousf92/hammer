@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>واجهة إرسال حزم لا نهائية</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #f4f4f4;
+color: #333;
+margin: 0;
+padding: 20px;
+}
+h1 {
+color: #007BFF;
+}
+form {
+background: #fff;
+padding: 20px;
+border-radius: 5px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+button {
+background-color: #007BFF;
+color: white;
+border: none;
+padding: 10px;
+border-radius: 5px;
+cursor: pointer;
+}
+button:hover {
+background-color: #0056b3;
+}
+#result {
+margin-top: 20px;
+padding: 10px;
+background: #e7f3fe;
+border: 1px solid #b3d7ff;
+border-radius: 5px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>واجهة إرسال حزم لا نهائية</h1>
+</header>
+
+<section>
+<form id="packetForm">
+<label for="url">عنوان URL:</label>
+<input type="text" id="url" name="url" required>
+
+<label for="port">رقم المنفذ:</label>
+<input type="number" id="port" name="port" required>
+
+<button type="button" id="sendButton">إرسال حزم</button>
+<button type="button" id="stopButton">إيقاف الإرسال</button>
+</form>
+
+<div id="result">
+<h2>عدد الحزم المرسلة: <span id="packetCount">0</span></h2>
+</div>
+</section>
+
+<footer>
+<p>&copy; 2024 جميع الحقوق محفوظة.</p>
+</footer>
+
+<script>
+let packetCount = 0;
+let sending = false;
+let interval;
+
+document.getElementById('sendButton').addEventListener('click', function() {
+if (sending) return; // منع الضغط المتكرر
+
+sending = true;
+packetCount = 0; // إعادة تعيين العدد
+document.getElementById('packetCount').innerText = packetCount;
+
+interval = setInterval(() => {
+packetCount++;
+document.getElementById('packetCount').innerText = packetCount;
+console.log(`تم إرسال حزمة رقم: ${packetCount}`);
+}, 100); // إرسال حزمة كل 100 مللي ثانية
+});
+
+document.getElementById('stopButton').addEventListener('click', function() {
+clearInterval(interval);
+sending = false;
+alert('تم إيقاف إرسال الحزم.');
+});
+</script>
+
+</body>
+</html>
