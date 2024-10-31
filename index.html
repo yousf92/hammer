@@ -67,8 +67,8 @@ font-size: 16px;
 </head>
 <body>
 <div class="container">
-<h2>سپامی ئاسیا</h2>
-<input type="text" id="phone" placeholder="ژمارەی سیمەکە بەم شێوە داغڵ کە (نمونە: 770...)" />
+<h2>سپامی ئاسیا لەلایەن یوسف الکردي</h2>
+<input type="text" id="phone" placeholder="ژمارەی موبایلەکەت داغڵکە بەم شێوە (نمونە: 770...)" />
 <button onclick="sendMessages()">ناردن</button>
 <div id="status" class="status"> ژمارەی نامەی نێردراو: 0</div>
 </div>
@@ -77,7 +77,7 @@ font-size: 16px;
 async function sendMessages() {
 let phone = document.getElementById("phone").value;
 let sent = 0;
-document.getElementById("status").innerText = "بۆستە وانامەکان ئەنێردرێن...";
+document.getElementById("status").innerText = "نامەکان وا ئەنێردرێن...";
 
 while (true) {
 try {
@@ -92,13 +92,13 @@ let result = await response.json();
 
 if (result.message.includes("successfully")) {
 sent++;
-document.getElementById("status").innerText = `نامەکە ڕۆشت بەس زۆر مەنێرە با بەعایلەتا نەیەنە خوارەوا | ژمارەی نامە: ${ڕۆشتووە}`;
+document.getElementById("status").innerText = `نامەکە بەسەرکەوتوی نێردرا کەم بنێرە با بەعایلەتا نەیەنە خوارەوە | ژمارە: ${sent}`;
 } else {
-document.getElementById("status").innerText = `غەڵەتێ ڕویدا لەناردنی نامەکە | العدد: ${sent}`;
+document.getElementById("status").innerText = `غەڵەتێ ڕوید لەناردنی نامەکان | ژمارەی نامە: ${sent}`;
 break;
 }
 } catch (error) {
-document.getElementById("status").innerText = `غەڵەتێ ڕویدا : ${error.message}`;
+document.getElementById("status").innerText = `حدث خطأ: ${error.message}`;
 break;
 }
 }
